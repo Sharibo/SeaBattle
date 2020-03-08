@@ -13,7 +13,7 @@ const game = {
         count: [1, 2, 3, 4],
         size: [4, 3, 2, 1],
     },
-    collision: new Set(),
+    collision: [],
     generateShip() {
         for (let i = 0; i < this.optionShip.count.length; i++) {
             for (let j = 0; j < this.optionShip.count[i]; j++) {
@@ -62,12 +62,16 @@ const game = {
     },
     checkCollision(location) {
         for (const coord of location) {
-            if (this.collision.has(coord)) {
-                return true;
+            for (const ship of this.collision) {
+                if (ship.has(coord)) {
+                    return true;
+                }                
             }
         }
     },
     addCollision(location) {
+        game.collision.push(new Set());
+        let k = game.collision.length - 1;
         for (let i = 0; i < location.length; i++) {
             const startCoordX = location[i][0] - 1;
             for (let j = startCoordX; j < startCoordX + 3; j++) {
@@ -75,7 +79,7 @@ const game = {
                 for (let z = startCoordY; z < startCoordY + 3; z++) {
                     if (j >= 0 && j < 10 && z >= 0 && z < 10) {
                         const coord = j + '' + z;
-                        this.collision.add(coord);
+                        this.collision[k].add(coord);
                     }
                 }
             }
@@ -124,7 +128,7 @@ const fire = (event) => {
     play.updateData = 'shot';
 
     for (let i = 0; i < game.ships.length; i++) {
-        const ship = game.ships[i];
+        const ship = game.ships[i];        
         const index = ship.location.indexOf(target.id);
         if (index >= 0) {
             show.hit(target);
@@ -136,6 +140,12 @@ const fire = (event) => {
                 play.updateData = 'dead';
                 for (const id of ship.location) {
                     show.dead(document.getElementById(id));
+                }
+                for (const id of game.collision[i].values()) {
+                    let target = document.getElementById(id);
+                    if (!target.classList.contains('miss') && !target.classList.contains('dead')) {
+                        show.miss(document.getElementById(id));
+                    }
                 }
                 game.shipCount -= 1;
 
