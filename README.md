@@ -1,6 +1,6 @@
 # Sea battle
 This game I made on [**Glo Academy**](https://glo.academy/) weekly intensive.
-It is only a frontend solution without backend. Used javascript for base logic, css and html for visualisation.
+It is only a frontend solution without backend. Used javascript for base logic, css and html for visualization.
 
 Warning: game on russian language.
 
